@@ -1,15 +1,21 @@
 <div class="container" style="width: 18rem;">
     <div class="row">
         <div class="col mx-auto">
-            <form method="POST" action="/login">
+            <form method="POST" action="/login" class="needs-validation" novalidate>
                 <div class="form-group">
                     <label for="inputEmail">Username</label>
-                    <input type="text" id="inputUsername" class="form-control" name="username" required autofocus>
+                    <input type="text" id="inputUsername" class="form-control" name="username" required>
+                    <div class="invalid-feedback">
+                        Username is required.
+                    </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="inputPassword">Password</label>
                     <input type="password" id="inputPassword" class="form-control" name="password" required>
+                    <div class="invalid-feedback">
+                        Password is required.
+                    </div>
                 </div>
 
                 <button class="btn btn-lg btn-primary btn-block btn-login" type="submit">Login</button>
@@ -33,3 +39,25 @@
         </div>
     </div>
 </div>
+
+<script>
+
+       const forms = document.getElementsByClassName('needs-validation');
+        
+        const validation = Array.prototype.filter.call(forms, function (form) {
+            form.addEventListener('submit', function (event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            });
+        });
+
+        {{#if validation}} 
+        const displayValidationError = Array.prototype.filter.call(forms, function (form) {
+                form.classList.add('was-validated');
+        });
+        {{/if}}
+
+</script>

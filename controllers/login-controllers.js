@@ -14,9 +14,15 @@ const users = [
 module.exports = class LoginController {
     post(req, res) {    
         //1. user adatok ellenőrzése
+        if(req.body.username === "" || req.body.password === ""){
+          res.redirect("/login?validate=true");
+          return;
+        }
+
         const user = users.find(
           user => user.username === req.body.username && user.password === req.body.password
         );
+
 
         if (!user){
             const error = "Error: invalid credentials";
@@ -33,11 +39,12 @@ module.exports = class LoginController {
     }
 
     get(req,res) {
-        const {error,message} = req.query;
+        const {error,message,validate} = req.query;
         res.render("login", {
           header: header,
           error: error,
-          message: message
+          message: message,
+          validation: validate
         })
       }
 
