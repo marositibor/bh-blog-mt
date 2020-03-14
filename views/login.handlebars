@@ -1,0 +1,35 @@
+<div class="container" style="width: 18rem;">
+    <div class="row">
+        <div class="col mx-auto">
+            <form method="POST" action="/login">
+                <div class="form-group">
+                    <label for="inputEmail">Username</label>
+                    <input type="text" id="inputUsername" class="form-control" name="username" required autofocus>
+                </div>
+                
+                <div class="form-group">
+                    <label for="inputPassword">Password</label>
+                    <input type="password" id="inputPassword" class="form-control" name="password" required>
+                </div>
+
+                <button class="btn btn-lg btn-primary btn-block btn-login" type="submit">Login</button>
+                {{#if error}}
+                <div class="alert alert-danger alert-dismissable mt-3" role="alert">
+                    {{error}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{/if}}
+                {{#if message}}
+                <div class="alert alert-success alert-dismissable mt-3" role="alert">
+                    {{message}}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{/if}}
+            </form>
+        </div>
+    </div>
+</div>

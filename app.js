@@ -1,21 +1,33 @@
 const express = require("express");
-const path = require("path");
 const hbs = require("express-handlebars");
-const sqlite3 = require("sqlite3").verbose();
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const path = require("path");
+
+const LoginController = require("./controllers/login-controllers");
+const authenticator = require("./middlewares/authenticator.js");
+
+
+const loginContoller = new LoginController;
 
 const PORT = 3000;
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 app.engine("handlebars", hbs());
 app.set("view engine", "handlebars");
+
 app.use(cookieParser());
-app.use(express.static("public"));
+
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 const header = "bh-blog";
+
+const AUTH_COOKIE = 'ssid'
+
 
 const postList = [{ 
     author: "admin", 
@@ -42,5 +54,18 @@ app.get("/", (req, res) => {
     postList: postList
   });
 });
+
+app.get("/login", loginContoller.get);
+
+app.post("/login", loginContoller.post);
+
+app.get("/admin", authenticator, (req,res) => {
+  res.render("dashboard", {
+    header: header,
+    username: req.session.username
+  });
+})
+
+app.get("/logout", authenticator, loginContoller.logout)
 
 app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`));
