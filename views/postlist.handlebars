@@ -1,0 +1,22 @@
+{{#each postList}}
+<div class="container mb-3 p3 border shadow">
+    <div class="row border-bottom">
+        <div class="col text-left">
+            <span>Author: {{author}}</span>
+        </div>
+        <div class="col text-right">
+            <span class="font-italic">{{date}}</span>
+        </div>
+    </div>
+    <div class="row pt-2">
+        <div class="col text-center">
+            <h3>{{title}}</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-justify">
+            {{content}}
+        </div>
+    </div>
+</div>
+{{/each}}
