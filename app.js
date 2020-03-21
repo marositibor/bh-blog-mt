@@ -36,6 +36,8 @@ const AUTH_COOKIE = 'ssid'
 
 app.get("/", postController.getPostList);
 
+app.get("/post/:id", postController.getPost)
+
 app.get("/login", loginContoller.get);
 
 app.post("/login", loginContoller.post);
@@ -47,9 +49,10 @@ app.get("/admin", authenticator, (req,res) => {
   });
 })
 
-app.get("/new_post", authenticator, postController.get)
+app.get("/new_post", authenticator, postController.getNewPost)
 
 app.post("/new_post", authenticator, postController.post)
+
 
 app.get("/logout", authenticator, loginContoller.logout)
 

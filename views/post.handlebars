@@ -1,0 +1,20 @@
+<div class="container mb-3 p3 border shadow">
+    <div class="row pt-2">
+        <div class="col text-center">
+            <h3>{{post.title}}</h3>
+        </div>
+    </div>
+    <div class="row border">
+        <div class="col text-left">
+            <span>Author: {{post.author}}</span>
+        </div>
+        <div class="col text-right">
+            <span class="font-italic">{{formatDate post.created_at}}</span>
+        </div>
+    </div>
+    <div class="row p-3">
+        <div class="col text-justify">
+            {{post.content}}
+        </div>
+    </div>
+</div>
