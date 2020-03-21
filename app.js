@@ -51,7 +51,7 @@ app.get("/admin", authenticator, (req,res) => {
 
 app.get("/new_post", authenticator, postController.getNewPost)
 
-app.post("/new_post", authenticator, postController.post)
+app.post("/new_post", authenticator, postController.validateCreateNewPost, postController.createNewPost)
 
 
 app.get("/logout", authenticator, loginContoller.logout)

@@ -7,26 +7,33 @@ const {
 } = require("../services/db-service");
 
 module.exports = class PostController {
-  post(req, res) {
-    if (req.body.postTitle === "" || req.body.postContent === "") {
-      res.redirect("/new_post?validate=true");
+  createNewPost(req, res) {
+    console.log(req.validationMessage);
+    if(req.validationMessage){
+      res.redirect("/new_post?validate="+req.validationMessage)
       return;
     }
-    const { postTitle, postContent } = req.body;
+    
+    const title = req.body.postTitle;
+    const content = req.body.postContent;
     const author = req.session.username;
-    const created_at = Date.now();
-    const id = Math.floor(Math.random() * 10000);
 
-    insertPost(author, created_at, postTitle, postContent)
-      .then(res.redirect("/admin"))
-      .catch(res.redirect("/new_post?validate=true"));
+    const post = {
+      author,
+      title,
+      content,
+      created_at: Date.now()
+    }
+
+    insertPost(post)
+      .then(() => res.redirect("/admin"))
+      .catch(() => res.redirect("/new_post?validate=true"));
   }
 
   getNewPost(req, res) {
     const validation = req.query.validate;
     res.render("new_post", {
       header: header,
-      username: req.session.username,
       validation
     });
   }
@@ -56,4 +63,25 @@ module.exports = class PostController {
         res.sendStatus(404);
       })
   }
+
+  validateCreateNewPost(req,res,next){
+    const invalidFields = [];
+    if(req.body.postTitle == undefined || req.body.postTitle == "" ){
+      invalidFields.push("Title is required!")
+    }
+
+    if(req.body.postContent == undefined || req.body.postContent =="" ){
+      invalidFields.push("Content is required!")
+    }
+    
+    if(invalidFields.length > 1){
+      req.validationMessage = "Fill all required fields!"
+      next();
+    }
+
+    req.validationMessage = invalidFields[0];
+    next(); 
+  }
+  
+
 };

@@ -18,12 +18,12 @@ module.exports = class {
     });
   }
 
-  static insertPost(author, created_at, title, content) {
+  static insertPost(post) {
     const sql =
       "INSERT INTO posts(author,created_at,title,content) VALUES (?,?,?,?)";
 
     return new Promise(function(resolve, reject) {
-      db.run(sql, [author, created_at, title, content], function(err) {
+      db.run(sql, [post.author, post.created_at, post.title, post.content], function(err) {
         if (err) {
           console.log(err.message);
           reject(err);

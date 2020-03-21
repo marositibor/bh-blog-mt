@@ -18,8 +18,10 @@
                         onclick="window.location.href = '/admin';">Discard</button>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
-                <div class="alert alert-danger mt-3 d-none" role="alert" id="validationError">
-
+                <div class="alert alert-danger mt-3 {{#unless validation}}d-none{{/unless}}" role="alert" id="validationErrorContainer">
+                    {{#if validation}}
+                      {{validation}}
+                    {{/if}}
                 </div>
             </form>
         </div>
@@ -29,7 +31,7 @@
 
     const newPostForm = document.getElementById('newPostForm');
 
-    const validationError = document.getElementById('validationError');
+    const validationError = document.getElementById('validationErrorContainer');
 
     newPostForm.addEventListener('submit', function (event) {
         if (newPostForm.checkValidity() === false) {
@@ -40,19 +42,18 @@
     });
 
     function showValidationError(form) {
-    const inputs = form.elements;
-    for (let i = 0; i < inputs.length; i++) {
-        if (!inputs[i].validity.valid) {
-            console.log(`${inputs[i].labels[0].textContent} is required!`)
-            validationError.innerHTML = `${inputs[i].labels[0].textContent} is required!`;
-            validationError.classList.remove("d-none");
-            return;
+        const inputs = form.elements;
+        const missingInputs = [];
+
+        for (let i = 0; i < inputs.length; i++) {
+            if (!inputs[i].validity.valid) {
+                missingInputs.push(inputs[i].labels[0].textContent);
+            }
+            if (missingInputs) {
+                validationError.innerHTML = `${missingInputs.join(" and ")} is required!`;
+                validationError.classList.remove("d-none");
+            }
+            console.log(missingInputs);
         }
     }
-    }; 
-
-    {{#if validation}}
-    showValidationError(newPostForm)
-    {{/if}}
-
 </script>
