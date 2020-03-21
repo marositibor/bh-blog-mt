@@ -1,5 +1,4 @@
 const header = "bh-blog";
-const posts = [];
 
 const {getAllPosts, insertPost} = require("../services/db-service");
 
