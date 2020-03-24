@@ -4,8 +4,24 @@ const db = new sqlite3.Database("blog.db");
 module.exports = class {
   static selectAllPosts() {
     return new Promise((resolve, reject) => {
-      db.all("SELECT id,title,author,created_at,content from posts", function(
+      db.all("SELECT id,title,author,created_at,content,publish from posts", function(
         err,
+        results
+      ) {
+        if (err) {
+          console.log(err.message);
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+  }
+
+  static selectPublishedPosts() {
+    return new Promise((resolve, reject) => {
+      db.all("SELECT id,title,author,created_at,content,publish from posts WHERE publish= true", function(
+        err, 
         results
       ) {
         if (err) {
@@ -20,12 +36,12 @@ module.exports = class {
 
   static insertPost(post) {
     const sql =
-      "INSERT INTO posts(slug,author,created_at,title,content) VALUES (?,?,?,?,?)";
+      "INSERT INTO posts(slug,author,created_at,title,content,publish) VALUES (?,?,?,?,?,?)";
 
     return new Promise(function(resolve, reject) {
       db.run(
         sql,
-        [post.slug, post.author, post.created_at, post.title, post.content],
+        [post.slug, post.author, post.created_at, post.title, post.content, post.publish],
         function(err) {
           if (err) {
             console.log(err.message);
@@ -40,7 +56,7 @@ module.exports = class {
 
   static selectPostById(id) {
     const sql =
-      "SELECT id,slug,title,author,created_at,content from posts WHERE id = ?";
+      "SELECT id,slug,title,author,created_at,content,publish from posts WHERE id = ?";
     return new Promise((resolve, reject) => {
       db.get(sql, id, function(err, result) {
         if (err) {
@@ -56,7 +72,7 @@ module.exports = class {
 
   static selectPostBySlug(slug) {
     const sql =
-      "SELECT id,slug,title,author,created_at,content from posts WHERE slug = ?";
+      "SELECT id,slug,title,author,created_at,content,publish from posts WHERE slug = ?";
     return new Promise((resolve, reject) => {
       db.get(sql, slug, function(err, result) {
         if (err) {
@@ -72,12 +88,12 @@ module.exports = class {
 
   static updatePost(post) {
     const sql =
-      "UPDATE posts SET slug = ?, title = ?, content = ? WHERE id = ?";
+      "UPDATE posts SET slug = ?, title = ?, content = ?, publish = ? WHERE id = ?";
 
     return new Promise(function(resolve, reject) {
       db.run(
         sql,
-        [post.slug, post.title, post.content, post.id],
+        [post.slug, post.title, post.content, post.publish, post.id],
         function(err) {
           if (err) {
             console.log(err.message);

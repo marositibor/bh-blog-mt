@@ -3,8 +3,9 @@ const db = new sqlite3.Database('blog.db')
 
 db.serialize(function () {
     
-    db.run("CREATE TABLE IF NOT EXISTS posts (id integer primary key autoincrement,slug text NOT NULL UNIQUE, author text, created_at integer, content text, title text)");
+    db.run("CREATE TABLE IF NOT EXISTS posts (id integer primary key autoincrement,slug text NOT NULL UNIQUE, author text, created_at integer, content text, title text, publish boolean DEFAULT FALSE)");
     
-    db.run("INSERT INTO posts(slug,author,created_at,title,content) VALUES ('new-post-title','admin',1584784416317,'New post Title','Valami valami valami')");
+    db.run("INSERT INTO posts(slug,author,created_at,title,content,publish) VALUES ('new-post-title','admin',1584784416317,'New post Title','Valami valami valami',TRUE)");
+    db.run("INSERT INTO posts(slug,author,created_at,title,content,publish) VALUES ('my-draft','admin',1584784416317,'My Draft Title','Draft draft draft',FALSE)");
 
 });

@@ -2,6 +2,7 @@ const header = "bh-blog";
 
 const {
   selectAllPosts,
+  selectPublishedPosts,
   insertPost,
   selectPostById,
   selectPostBySlug,
@@ -19,13 +20,16 @@ module.exports = class PostController {
     const title = req.body.postTitle;
     const content = req.body.postContent;
     const slug = req.body.postSlug;
+    const publish = JSON.parse(req.body.publish);
     const author = req.session.username;
+  console.log("publish: " + publish);
 
     const post = {
       author,
       title,
       content,
       slug,
+      publish,
       created_at: Date.now()
     };
 
@@ -39,7 +43,7 @@ module.exports = class PostController {
   }
 
   getPostList(req, res) {
-    selectAllPosts().then(postList => {
+    selectPublishedPosts().then(postList => {
       res.render("postlist", {
         header: header,
         postList
@@ -100,6 +104,8 @@ module.exports = class PostController {
     const content = req.body.postContent;
     const slug = req.body.postSlug;
     const author = req.session.username;
+    const publish = JSON.parse(req.body.publish);
+
 
     const post = {
       id,
@@ -107,6 +113,7 @@ module.exports = class PostController {
       title,
       content,
       slug,
+      publish,
       created_at: Date.now()
     };
 
@@ -129,6 +136,8 @@ module.exports = class PostController {
   validateCreateNewPost(req, res, next) {
     req.form = {};
     const invalidFields = [];
+    const publish = req.body.publish ? JSON.parse(req.body.publish) : true;
+
     if (req.body.postTitle == undefined || req.body.postTitle == "") {
       invalidFields.push("Title is required!");
     }
@@ -137,7 +146,7 @@ module.exports = class PostController {
       invalidFields.push("Content is required!");
     }
 
-    if (invalidFields.length == 0) {
+    if (publish == false || invalidFields.length == 0) {
       req.form.isValid = true;
       next();
     } else {

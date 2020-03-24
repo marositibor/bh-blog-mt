@@ -10,8 +10,8 @@
   </thead>
   <tbody>
 {{#each postList}}
-    <tr>
-      <td>{{title}}</th>
+    <tr {{#unless publish}}class="font-italic"{{/unless}}>
+      <td>{{#unless publish}}*draft* {{/unless}}{{title}}</th>
       <td>{{author}}</td>
       <td>{{formatDate created_at}}</td>
       <td><a class="btn btn-primary" href="/edit_post/{{id}}">Edit</a></td>

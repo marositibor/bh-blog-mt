@@ -18,17 +18,20 @@
                     <textarea class="form-control" id="postContent" placeholder="Lorem ipsum dolor sit amet"
                         name="postContent" short="Content" required></textarea>
                 </div>
+                <input type="hidden" name="publish" id="publish" value="false">
                 <div class="d-flex justify-content-between">
                     <button type="button" class="btn btn-outline-primary"
                         onclick="window.location.href = '/admin';">Discard</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary" id="draftButton">Save as draft</button>
+                    <button type="submit" class="btn btn-primary" id="publishButton">Publish</button>
                 </div>
-                <div class="alert alert-danger mt-3 {{#unless validation}}d-none{{/unless}}" role="alert" id="validationErrorContainer">
+                <div class="alert alert-danger mt-3 {{#unless validation}}d-none{{/unless}}" role="alert"
+                    id="validationErrorContainer">
                     {{#if validation}}
                     <ul class="m-0">
-                      {{#each validation}}
+                        {{#each validation}}
                         <li>{{this}}</li>
-                      {{/each}}
+                        {{/each}}
                     </ul>
                     {{/if}}
                 </div>
@@ -40,14 +43,19 @@
 
     const newPostForm = document.getElementById('newPostForm');
 
+    const publish = document.getElementById('publish');
+
     const validationError = document.getElementById('validationErrorContainer');
 
-     newPostForm.addEventListener('submit', function (event) {
-        if (newPostForm.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
-            showValidationError(newPostForm)
+    newPostForm.addEventListener('submit', function (event) {
+        if (isPublish()) {
+            if (newPostForm.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+                showValidationError(newPostForm)
+            }
         }
+        setPublish();
     });
 
     function showValidationError(form) {
@@ -65,4 +73,15 @@
             console.log(missingInputs);
         }
     }
+
+    function isPublish(){
+        return document.activeElement.id == "publishButton"
+    }
+
+    function setPublish(){
+            publish.value = isPublish();
+    }
+
+
+
 </script>
