@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.engine('handlebars', hbs({
   extname: '.handlebars',
-  helpers: require('./config/handlebars-helpers')
+  helpers: require('./utils/handlebars-helpers')
 }));
 
 app.set("view engine", "handlebars");
