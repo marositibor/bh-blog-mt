@@ -4,7 +4,8 @@ const {
   selectAllPosts,
   insertPost,
   selectPostById,
-  selectPostBySlug
+  selectPostBySlug,
+  updatePost
 } = require("../services/db-service");
 
 module.exports = class PostController {
@@ -46,6 +47,15 @@ module.exports = class PostController {
     });
   }
 
+  getPostListAdmin(req, res) {
+    selectAllPosts().then(postList => {
+      res.render("postlist-admin", {
+        header: header,
+        postList
+      });
+    });
+  }
+
   getPost(req, res) {
     if (!req.params.id) {
       res.redirect("/");
@@ -76,6 +86,44 @@ module.exports = class PostController {
           res.sendStatus(404);
         });
     }
+  }
+
+  editPost(req, res) {
+
+    if (!req.form.isValid) {
+      res.sendStatus(400);
+      return;
+    }
+
+    const id = req.params.id;
+    const title = req.body.postTitle;
+    const content = req.body.postContent;
+    const slug = req.body.postSlug;
+    const author = req.session.username;
+
+    const post = {
+      id,
+      author,
+      title,
+      content,
+      slug,
+      created_at: Date.now()
+    };
+
+    updatePost(post).then(() => res.redirect("/admin/post_list"));
+  }
+
+  getEditPost(req,res){
+    selectPostById(req.params.id)
+    .then(post => {
+      res.render("edit_post", {
+        header: header,
+        post
+      });
+    })
+    .catch(() => {
+      res.sendStatus(404);
+    });
   }
 
   validateCreateNewPost(req, res, next) {

@@ -40,7 +40,7 @@ module.exports = class {
 
   static selectPostById(id) {
     const sql =
-      "SELECT id,title,author,created_at,content from posts WHERE id = ?";
+      "SELECT id,slug,title,author,created_at,content from posts WHERE id = ?";
     return new Promise((resolve, reject) => {
       db.get(sql, id, function(err, result) {
         if (err) {
@@ -56,7 +56,7 @@ module.exports = class {
 
   static selectPostBySlug(slug) {
     const sql =
-      "SELECT id,title,author,created_at,content from posts WHERE slug = ?";
+      "SELECT id,slug,title,author,created_at,content from posts WHERE slug = ?";
     return new Promise((resolve, reject) => {
       db.get(sql, slug, function(err, result) {
         if (err) {
@@ -67,6 +67,26 @@ module.exports = class {
           resolve(result);
         }
       });
+    });
+  }
+
+  static updatePost(post) {
+    const sql =
+      "UPDATE posts SET slug = ?, title = ?, content = ? WHERE id = ?";
+
+    return new Promise(function(resolve, reject) {
+      db.run(
+        sql,
+        [post.slug, post.title, post.content, post.id],
+        function(err) {
+          if (err) {
+            console.log(err.message);
+            reject(err);
+          }
+          console.log(`post(id: ${post.id}) updated`);
+          resolve();
+        }
+      );
     });
   }
 };

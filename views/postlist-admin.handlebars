@@ -1,0 +1,21 @@
+<a class="btn btn-primary mb-3" href="/new_post">New Post</a>
+<table class="table mb-3 border shadow">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Title</th>
+      <th scope="col">Author</th>
+      <th scope="col">Publish date</th>
+      <th scope="col">Operations</th>
+    </tr>
+  </thead>
+  <tbody>
+{{#each postList}}
+    <tr>
+      <td>{{title}}</th>
+      <td>{{author}}</td>
+      <td>{{formatDate created_at}}</td>
+      <td><a class="btn btn-primary" href="/edit_post/{{id}}">Edit</a></td>
+    </tr>
+{{/each}}
+  </tbody>
+</table>
