@@ -20,7 +20,11 @@
                 </div>
                 <div class="alert alert-danger mt-3 {{#unless validation}}d-none{{/unless}}" role="alert" id="validationErrorContainer">
                     {{#if validation}}
-                      {{validation}}
+                    <ul class="m-0">
+                      {{#each validation}}
+                        <li>{{this}}</li>
+                      {{/each}}
+                    </ul>
                     {{/if}}
                 </div>
             </form>
@@ -33,12 +37,12 @@
 
     const validationError = document.getElementById('validationErrorContainer');
 
-    newPostForm.addEventListener('submit', function (event) {
+     newPostForm.addEventListener('submit', function (event) {
         if (newPostForm.checkValidity() === false) {
             event.preventDefault();
             event.stopPropagation();
+            showValidationError(newPostForm)
         }
-        showValidationError(newPostForm)
     });
 
     function showValidationError(form) {

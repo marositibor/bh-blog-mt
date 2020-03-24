@@ -8,12 +8,13 @@ const {
 
 module.exports = class PostController {
   createNewPost(req, res) {
-    console.log(req.validationMessage);
-    if(req.validationMessage){
-      res.redirect("/new_post?validate="+req.validationMessage)
+    console.log(req.form);
+
+    if(!req.form.isValid){
+      res.sendStatus(400);
       return;
     }
-    
+
     const title = req.body.postTitle;
     const content = req.body.postContent;
     const author = req.session.username;
@@ -27,14 +28,11 @@ module.exports = class PostController {
 
     insertPost(post)
       .then(() => res.redirect("/admin"))
-      .catch(() => res.redirect("/new_post?validate=true"));
   }
 
   getNewPost(req, res) {
-    const validation = req.query.validate;
     res.render("new_post", {
       header: header,
-      validation
     });
   }
 
@@ -49,7 +47,7 @@ module.exports = class PostController {
 
   getPost(req, res) {
     if (!req.params.id) {
-      res.redirect("/admin");
+      res.redirect("/");
       return;
     }
     selectPost(req.params.id)
@@ -65,6 +63,7 @@ module.exports = class PostController {
   }
 
   validateCreateNewPost(req,res,next){
+    req.form = {};
     const invalidFields = [];
     if(req.body.postTitle == undefined || req.body.postTitle == "" ){
       invalidFields.push("Title is required!")
@@ -73,14 +72,15 @@ module.exports = class PostController {
     if(req.body.postContent == undefined || req.body.postContent =="" ){
       invalidFields.push("Content is required!")
     }
-    
-    if(invalidFields.length > 1){
-      req.validationMessage = "Fill all required fields!"
-      next();
-    }
 
-    req.validationMessage = invalidFields[0];
-    next(); 
+    if(invalidFields.length == 0){
+      req.form.isValid = true;
+      next();
+    } else {
+      req.form.isValid = false;
+      req.form.validationMessage = invalidFields;
+      next
+    }
   }
   
 

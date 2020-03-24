@@ -4,13 +4,6 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 
-const LoginController = require("./controllers/login-controllers");
-const PostController = require("./controllers/post-controllers");
-const authenticator = require("./middlewares/authenticator.js");
-
-
-const loginContoller = new LoginController;
-const postController = new PostController;
 
 const PORT = 3000;
 const app = express();
@@ -24,6 +17,14 @@ app.engine('handlebars', hbs({
 }));
 
 app.set("view engine", "handlebars");
+
+const LoginController = require("./controllers/login-controllers");
+const PostController = require("./controllers/post-controllers");
+const authenticator = require("./middlewares/authenticator.js");
+
+
+const loginContoller = new LoginController;
+const postController = new PostController;
 
 app.use(cookieParser());
 
@@ -52,7 +53,6 @@ app.get("/admin", authenticator, (req,res) => {
 app.get("/new_post", authenticator, postController.getNewPost)
 
 app.post("/new_post", authenticator, postController.validateCreateNewPost, postController.createNewPost)
-
 
 app.get("/logout", authenticator, loginContoller.logout)
 
