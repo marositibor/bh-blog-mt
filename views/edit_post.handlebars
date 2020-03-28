@@ -47,12 +47,10 @@
     const validationError = document.getElementById('validationErrorContainer');
 
     newPostForm.addEventListener('submit', function (event) {
-        if (isPublish()) {
-            if (newPostForm.checkValidity() === false) {
-                event.preventDefault();
-                event.stopPropagation();
-                showValidationError(newPostForm)
-            }
+        if (newPostForm.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+            showValidationError(newPostForm)
         }
         setPublish();
     });
@@ -73,14 +71,8 @@
         }
     }
 
-    function isPublish() {
-        return document.activeElement.id == "publishButton"
-    }
-
     function setPublish() {
-        publish.value = isPublish();
+        publish.value = document.activeElement.id == "publishButton"
     }
-
-
 
 </script>
