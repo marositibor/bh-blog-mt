@@ -4,6 +4,15 @@
             {{>archive_partial}}
         </div>
         <div class="col-9 mb-3 border">
+            <div class="row p-3 flex-row-reverse">
+                <form method="GET" action="/" class="form-inline">
+                    <div class="form-group pr-3">
+                        <label for="search" class="pr-3">Search:</label>
+                        <input type="text" class="form-control" id="search" name="search" value="{{search}}">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </div>
             {{#each postList}}
             <div class="row border-bottom p-3">
                 <div class="col text-left">

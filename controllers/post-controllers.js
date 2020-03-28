@@ -9,7 +9,7 @@ const {
 	updatePost
 } = require("../services/db-service");
 
-const {orderByYearMonth} = require("../services/post-service");
+const { orderByYearMonth } = require("../services/post-service");
 
 module.exports = class PostController {
 	createNewPost(req, res) {
@@ -43,57 +43,58 @@ module.exports = class PostController {
 		});
 	}
 
-	getPostList(req, res) {
+	async getPostList(req, res) {
+		const search = req.query.search;
+		const postList = await selectPublishedPosts(search);
+		const archive = orderByYearMonth(await selectPublishedPosts());
 
-		selectPublishedPosts().then(postList => {
-			console.log(orderByYearMonth(postList))
-
-			res.render("postlist", {
-				header: header,
-				postList,
-				archive: orderByYearMonth(postList)
-			});
+		res.render("postlist", {
+			header: header,
+			postList,
+			search,
+			archive
 		});
 	}
 
-	getPostListAdmin(req, res) {
-		selectAllPosts().then(postList => {
-			res.render("postlist-admin", {
-				header: header,
-				postList
-			});
+	async getPostListAdmin(req, res) {
+		const postList = await selectAllPosts();
+
+		res.render("postlist-admin", {
+			header: header,
+			postList
 		});
 	}
 
-	getPost(req, res) {
+	async getPost(req, res) {
 		if (!req.params.id) {
 			res.redirect("/");
 			return;
 		}
 
 		if (isNaN(req.params.id)) {
-			selectPostBySlug(req.params.id)
-				.then(post => {
-					res.render("post", {
-						header: header,
-						post
-					});
-				})
-				.catch(() => {
-					res.sendStatus(404);
+			try {
+				const post = await selectPostBySlug(req.params.id);
+				res.render("post", {
+					header: header,
+					post
 				});
-			return;
+				return;
+			} catch (err) {
+				res.sendStatus(404)
+				return;
+			}
 		} else {
-			selectPostById(req.params.id)
-				.then(post => {
-					res.render("post", {
-						header: header,
-						post
-					});
-				})
-				.catch(() => {
-					res.sendStatus(404);
+			try {
+				const post = await selectPostById(req.params.id);
+				res.render("post", {
+					header: header,
+					post
 				});
+				return
+			} catch (err) {
+				res.sendStatus(404)
+				return;
+			}
 		}
 	}
 

@@ -18,9 +18,22 @@ module.exports = class {
     });
   }
 
-  static selectPublishedPosts() {
+  static selectPublishedPosts(searchQuery) {
+
+    const select = "SELECT id,title,author,created_at,content,publish from posts WHERE publish = true "
+    const search = searchQuery ? "AND (title LIKE ? OR content LIKE ? )" : ""
+    const order_by = "ORDER BY created_at DESC "
+  
+    const sql = select + search + order_by;
+
+    const params = [sql];
+
+    if(searchQuery){
+      params.push(["%"+searchQuery+"%","%"+searchQuery+"%"])
+    }
+    
     return new Promise((resolve, reject) => {
-      db.all("SELECT id,title,author,created_at,content,publish from posts WHERE publish= true ORDER BY created_at DESC", function(
+      db.all(...params, function(
         err, 
         results
       ) {
@@ -63,7 +76,7 @@ module.exports = class {
           console.log(err.message);
           reject(err);
         } else {
-          if (!result) reject(err);
+          if (!result) reject("No such post");
           resolve(result);
         }
       });
@@ -79,7 +92,7 @@ module.exports = class {
           console.log(err.message);
           reject(err);
         } else {
-          if (!result) reject(err);
+          if (!result) reject("No such post");
           resolve(result);
         }
       });
