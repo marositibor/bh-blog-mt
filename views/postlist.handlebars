@@ -1,12 +1,19 @@
-<div class="container mb-3 border shadow">
-{{#each postList}}
-    <div class="row border-bottom p-3">
-        <div class="col text-left">
-            <a href="/post/{{id}}"> {{title}} (by {{author}})</a>
+<div class="container">
+    <div class="row">
+        <div class="col-3 mb-3 border">
+            {{>archive_partial}}
         </div>
-        <div class="col text-right">
-            <span class="font-italic">{{formatDate created_at}}</span>
+        <div class="col-9 mb-3 border">
+            {{#each postList}}
+            <div class="row border-bottom p-3">
+                <div class="col text-left">
+                    <a href="/post/{{id}}"> {{title}} (by {{author}})</a>
+                </div>
+                <div class="col text-right">
+                    <span class="font-italic">{{formatDate created_at}}</span>
+                </div>
+            </div>
+            {{/each}}
         </div>
     </div>
-{{/each}}
 </div>

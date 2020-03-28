@@ -9,6 +9,8 @@ const {
 	updatePost
 } = require("../services/db-service");
 
+const {orderByYearMonth} = require("../services/post-service");
+
 module.exports = class PostController {
 	createNewPost(req, res) {
 		if (!req.form.isValid) {
@@ -42,10 +44,14 @@ module.exports = class PostController {
 	}
 
 	getPostList(req, res) {
+
 		selectPublishedPosts().then(postList => {
+			console.log(orderByYearMonth(postList))
+
 			res.render("postlist", {
 				header: header,
-				postList
+				postList,
+				archive: orderByYearMonth(postList)
 			});
 		});
 	}

@@ -20,7 +20,7 @@ module.exports = class {
 
   static selectPublishedPosts() {
     return new Promise((resolve, reject) => {
-      db.all("SELECT id,title,author,created_at,content,publish from posts WHERE publish= true", function(
+      db.all("SELECT id,title,author,created_at,content,publish from posts WHERE publish= true ORDER BY created_at DESC", function(
         err, 
         results
       ) {
